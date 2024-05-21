@@ -73,21 +73,16 @@ export const {
   },
   callbacks: {
     jwt({ token, user }) {
-      console.log(user);
-      console.log(token);
-      if (user) token.id = user.sub;
-
       return token;
     },
     session({ session, token }) {
-     
       console.log(token);
-      session.user.id = token.sub;
+      session?.user?.id as string = token.sub;
       console.log(session);
       return session;
     },
 
-    signIn: async ({ user, account }) => {
+    signIn : async ({ user, account }) => {
       if (account?.provider === "credentials") {
         return true;
       }

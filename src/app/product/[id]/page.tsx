@@ -5,7 +5,7 @@ import RelatedProducts from "@/app/componenets/productDetails/RelatedProducts";
 import { findProductById, findRelatedProducts } from "@/db/queries";
 import { dbConnect } from "@/server";
 import { Product } from "@/type";
-export async function generateMetadata({ params, searchParams }, parent) {
+export async function generateMetadata({ params }:{ params: { id: string } }) {
   // read route params
   const id = params.id;
   await dbConnect();

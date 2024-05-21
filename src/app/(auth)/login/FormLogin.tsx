@@ -1,13 +1,10 @@
 "use client";
-import SscialLogins from "@/app/componenets/auth/SscialLogins";
-import { validateCustomerLogin } from "@/app/zodValidation";
-import { auth, signIn } from "@/auth";
-import { login } from "@/db/action";
-import { CredentialsSignin } from "next-auth";
 
-import Link from "next/link";
+import { login } from "@/db/action";
+
+
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+
 import { toast } from "sonner";
 
 const FormLogin = () => {
@@ -29,12 +26,12 @@ const FormLogin = () => {
         
 
         if (res.success) {
-          toast.success(res.message, {
+          toast.success(res?.message as string, {
             id: toastId,
           });
           route.refresh();
         } else {
-          toast.error(res.message, {
+          toast.error(res.message as string, {
             id: toastId,
           });
         }

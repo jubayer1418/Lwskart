@@ -66,10 +66,17 @@ const Modal = () => {
 export default Modal;
 
 export const ModalButtonS = () => {
+  const handleClick = () => {
+    const modal = document.getElementById("my_modal_5") as HTMLDialogElement | null;
+    if (modal) {
+      modal.showModal();
+    }
+  };
+
   return (
     <button
       className="text-primary"
-      onClick={() => document.getElementById("my_modal_5").showModal()}
+      onClick={handleClick}
     >
       Edit
     </button>
