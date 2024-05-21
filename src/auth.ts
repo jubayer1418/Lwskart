@@ -72,62 +72,53 @@ export const {
     signIn: "/login",
   },
   callbacks: {
-    jwt({ token, user }) {
+    async jwt({ token, user }) {
+      if (user) {
+        token.id = user.id;
+      }
       return token;
     },
-    session({ session, token }) {
-      console.log(token);
-      session?.user?.id as string = token.sub;
-      console.log(session);
+    async session({ session, token }) {
+      if (token && session.user) {
+        session.user.id = token.id as string;
+      }
       return session;
     },
 
-    signIn : async ({ user, account }) => {
+    signIn: async ({ user, account }) => {
       if (account?.provider === "credentials") {
         return true;
       }
 
-      if (account?.provider === "google") {
+      if (account?.provider === "google" || account?.provider === "facebook") {
         try {
           const { email, name, image, id } = user;
           await dbConnect();
-          const alreadyUser = await Customer.findOne({ email });
+          const alreadyUser = await Customer.findOne({ email }).exec();
 
           if (!alreadyUser) {
-            const newUser = await Customer.create({
-              email,
-              name,
-              image,
-              googleId: id,
-            });
+            if (account.provider === "google") {
+              await Customer.create({
+                email,
+                name,
+                image,
+                googleId: id,
+              });
+            } else if (account.provider === "facebook") {
+              await Customer.create({
+                email,
+                name,
+                image,
+                facebookId: id,
+              });
+            }
           }
           return true;
         } catch (error) {
           throw new AuthError("Error creating user");
         }
       }
-      if (account?.provider === "facebook") {
-        try {
-          const { email, name, image, id } = user;
-          console.log(user);
-          await dbConnect();
-          const alreadyUser = await Customer.findOne({ email });
-
-          if (!alreadyUser) {
-            await Customer.create({
-              email,
-              name,
-              image,
-              facebookId: id,
-            });
-            return true;
-          } else {
-            return true;
-          }
-        } catch (error) {
-          throw new AuthError("Error creating user");
-        }
-      }
+      return false;
     },
   },
 });

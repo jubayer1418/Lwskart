@@ -6,11 +6,12 @@ import img from "@/assets/images/category/category-1.jpg";
 interface Category {
   id: string;
   category: string;
-  image: string;
+  image: string[];
 }
 export default async function ShopByCategory() {
   await dbConnect();
   const categories = await getAllCategories();
+
 
   return (
     <div className="container py-16">
@@ -29,7 +30,6 @@ export default async function ShopByCategory() {
               className="w-full"
               width={200}
               height={200}
-              
             />
             <Link
               href={`/shop?category=${category.category}`}
