@@ -1,0 +1,68 @@
+{
+  "header": {
+    "search": "অনুসন্ধান",
+    "wishlist": "ইচ্ছেতালিকা",
+    "cart": "কার্ট",
+    "login": "লগইন",
+
+    "singOut": "সাইন আউট",
+    "account": "অ্যাকাউন্ট",
+    "Home": "হোম",
+    "About": "সম্পর্কে",
+    "ContactUs": "যোগাযোগ করুন",
+    "Blog": "ব্লগ",
+    "Shop": "দোকান",
+    "My Account": "আমার অ্যাকাউন্ট",
+    "AllCategories": "সব বিভাগ",
+    "NewArrivals": "নতুন আগমন",
+
+    "Category": "বিভাগ অনুসারে কেনাকাটা করুন",
+    "Trending": "ট্রেন্ডিং পণ্য",
+    "Featured": "ফিচারড",
+    "BestSeller": "সেরা বিক্রেতা"
+  },
+  "features": {
+    "freeShipping": "বিনামূল্যে শিপিং",
+    "orderOver": "$200 এর বেশি অর্ডার",
+    "moneyReturns": "টাকা ফেরত",
+    "moneyReturnsDescription": "৩০ দিনের টাকা ফেরত",
+    "support": "২৪/৭ সমর্থন",
+    "supportDescription": "গ্রাহক সহায়তা"
+  },
+  "banner": {
+    "title": "বাড়ির সাজসজ্জার সেরা সংগ্রহ",
+    "description": "ই-কমার্স হলো পণ্য এবং সেবার ইলেকট্রনিক বাণিজ্যিক ক্রয়-বিক্রয়, সাধারণত ইন্টারনেটের মাধ্যমে।",
+    "shopNow": "এখনই কিনুন"
+  },
+  "buttons": {
+    "addToCart": "কার্টে যোগ করুন",
+    "buyNow": "এখনই কিনুন",
+    "viewDetails": "বিস্তারিত দেখুন",
+    "share": "শেয়ার করুন",
+    "addToWishlist": "ইচ্ছেতালিকায় যোগ করুন"
+  },
+
+  "footer": {
+    "description": "ই-কমার্স হলো পণ্য এবং সেবার ইলেকট্রনিক বাণিজ্যিক ক্রয়-বিক্রয়, সাধারণত ইন্টারনেটের মাধ্যমে।",
+    "solutions": "সমাধানসমূহ",
+    "support": "সহায়তা",
+    "marketing": "মার্কেটিং",
+    "analytics": "বিশ্লেষণ",
+    "commerce": "বাণিজ্য",
+    "insights": "অন্তর্দৃষ্টি",
+    "pricing": "মূল্য নির্ধারণ",
+    "guides": "গাইডস",
+    "apiStatus": "API অবস্থা",
+    "documentation": "নথিপত্র"
+  },
+  "footerBottom": {
+    "rights": "&copy; টেইলকমার্স - সর্বস্বত্ব সংরক্ষিত"
+  },
+  "loginPage": {
+    "title": "লগইন",
+    "welcomeMessage": "পুনরায় স্বাগতম, গ্রাহক",
+    "loginWith": "অথবা লগইন করুন",
+    "registerMessage": "আপনার কোনো অ্যাকাউন্ট নেই?",
+    "registerLink": "এখনই নিবন্ধন করুন"
+  }
+}

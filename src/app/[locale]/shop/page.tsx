@@ -1,5 +1,5 @@
 import { dbConnect } from "@/server";
-import Card from "../componenets/card/Card";
+import Card from "../../componenets/card/Card";
 import {
   getAllCategories,
   getAllCategoriesSum,
@@ -17,7 +17,6 @@ const ShopPage = async ({ searchParams }: any) => {
   const products = await searchProducts(searchParams);
 
   const categories = await getAllCategoriesSum();
-
 
   return (
     <div className="container grid md:grid-cols-4 grid-cols-2 gap-6 pt-4 pb-16 items-start">

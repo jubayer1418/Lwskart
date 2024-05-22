@@ -7,7 +7,7 @@ import { signIn } from "next-auth/react";
 
 const SscialLogins = () => {
   const handleAuth = () => {
-    signIn("google", { callbackUrl: "http://localhost:3000/shop" });
+    signIn("google", { callbackUrl: "http://localhost:3000/" });
   };
   const handleAuthFacebook = () => {
     signIn("facebook", { callbackUrl: "http://localhost:3000/" });

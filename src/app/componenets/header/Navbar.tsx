@@ -7,12 +7,16 @@ import { getAllCategoriesSum } from "@/db/queries";
 import { dbConnect } from "@/server";
 import { auth } from "@/auth";
 import Logout from "../auth/Logout";
-import sofa from "@/assets/images/icons/sofa.svg"
-export default async function Navbar() {
-  const session = await auth();
-  await dbConnect();
-  const categories = await getAllCategoriesSum();
-  console.log(session);
+import sofa from "@/assets/images/icons/sofa.svg";
+import { Session } from "next-auth";
+import { useTranslations } from "next-intl";
+interface HeaderProps {
+  session: Session | null;
+
+  categories: any[];
+}
+export default function Navbar({ session,categories }:HeaderProps) {
+  const t = useTranslations('header');
   return (
     <nav className="bg-gray-800">
       <div className="container flex">
@@ -20,7 +24,7 @@ export default async function Navbar() {
           <span className="text-white">
             <i className="fa-solid fa-bars"></i>
           </span>
-          <span className="capitalize ml-2 text-white">All Categories</span>
+          <span className="capitalize ml-2 text-white">{t("AllCategories")}</span>
 
           {/* dropdown */}
           <div
@@ -31,7 +35,7 @@ export default async function Navbar() {
               return (
                 <Link
                   key={category._id}
-                  href={`/shop/?category=${category._id}`}
+                  href={`/en/shop/?category=${category._id}`}
                   className="flex items-center px-6 py-3 hover:bg-gray-100 transition"
                 >
                   <Image
@@ -54,38 +58,38 @@ export default async function Navbar() {
               href={"/"}
               className="text-gray-200 hover:text-white transition"
             >
-              Home
+            {t("Home")}
             </Link>
 
             <Link
-              href="/shop"
+              href="/en/shop"
               className="text-gray-200 hover:text-white transition"
             >
-              Shop
+             {t("Shop")}
             </Link>
 
             <a
-              href="about"
+              href="/en/about"
               className="text-gray-200 hover:text-white transition"
             >
-              About us
+                 {t("About")}
             </a>
             <a
-              href="contact"
+              href="/en/contact"
               className="text-gray-200 hover:text-white transition"
             >
-              Contact us
+            {t("ContactUs")}
             </a>
           </div>
 
           {session?.user?.email ? (
-            <Logout/>
+            <Logout />
           ) : (
             <Link
-              href="/login"
+              href="/en/login"
               className="text-red-200 hover:text-white transition"
             >
-              Login
+             {t("login")}
             </Link>
           )}
         </div>

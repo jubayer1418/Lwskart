@@ -9,13 +9,17 @@ import SearcProduct from "./SearcProduct";
 import logo from "@/assets/images/logo.svg";
 import { auth } from "@/auth";
 import { Session } from "next-auth";
+import { unstable_setRequestLocale } from "next-intl/server";
+import { useTranslations } from "next-intl";
+import LocalSwitcher from "../en_bg/local_switcher";
+interface HeaderProps {
+  carts: any[];
+  wishlist: any[];
+}
 
-export default async function Header() {
-  const session: Session | null | undefined = await auth();
-
-  const carts = await getAllCartEntries(session?.user?.id as string);
-  await dbConnect();
-  const wishlist = await getAllWishlistEntries(session?.user?.id as string);
+export default function Header({ carts, wishlist }: HeaderProps) {
+ 
+  const t = useTranslations("header");
 
   return (
     <header className="py-4 shadow-sm bg-white">
@@ -30,40 +34,42 @@ export default async function Header() {
           </span>
           <SearcProduct />
         </div>
-
+        <div>
+          <LocalSwitcher />
+        </div>
         <div className="flex items-center space-x-4">
           <Link
-            href="/wishlist"
+            href="/en/wishlist"
             className="text-center text-gray-700 hover:text-primary transition relative"
           >
             <div className="text-2xl">
               <i className="fa-regular fa-heart"></i>
             </div>
-            <div className="text-xs leading-3">Wishlist</div>
+            <div className="text-xs leading-3">{t("wishlist")}</div>
             <div className="absolute right-0 -top-1 w-5 h-5 rounded-full flex items-center justify-center bg-primary text-white text-xs">
               {wishlist.length}
             </div>
           </Link>
           <Link
-            href="/checkout"
+            href="/en/checkout"
             className="text-center text-gray-700 hover:text-primary transition relative"
           >
             <div className="text-2xl">
               <i className="fa-solid fa-bag-shopping"></i>
             </div>
-            <div className="text-xs leading-3">Cart</div>
+            <div className="text-xs leading-3">{t("cart")}</div>
             <div className="absolute -right-3 -top-1 w-5 h-5 rounded-full flex items-center justify-center bg-primary text-white text-xs">
               {carts.length}
             </div>
           </Link>
           <Link
-            href="/account"
+            href="/en/account"
             className="text-center text-gray-700 hover:text-primary transition relative"
           >
             <div className="text-2xl">
               <i className="fa-regular fa-user"></i>
             </div>
-            <div className="text-xs leading-3">Account</div>
+            <div className="text-xs leading-3">{t("account")}</div>
           </Link>
         </div>
       </div>

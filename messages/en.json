@@ -1,0 +1,67 @@
+{
+  "header": {
+    "search": "Search",
+    "wishlist": "Wishlist",
+    "cart": "Cart",
+    "login": "Login",
+
+    "singOut": "Sing Out",
+    "account": "Account",
+    "Home": "Home",
+    "About": "About",
+    "ContactUs": "Contact Us",
+    "Blog": "Blog",
+    "Shop": "Shop",
+    "My Account": "My Account",
+    "AllCategories": "All Categories",
+    "NewArrivals": "Top New Arrivals",
+
+    "Category": "SHOP BY CATEGORY",
+    "Trending": "TRENDING PRODUCTS",
+    "Featured": "Featured",
+    "BestSeller": "Best Seller"
+  },
+  "banner": {
+    "title": "Best Collection For Home Decoration",
+    "description": "Ecommerce is the electronic buying and selling of goods and services, usually via the internet.",
+    "shopNow": "Shop Now"
+  },
+  "features": {
+    "freeShipping": "Free Shipping",
+    "orderOver": "Order over $200",
+    "moneyReturns": "Money Returns",
+    "moneyReturnsDescription": "30 days money returns",
+    "support": "24/7 Support",
+    "supportDescription": "Customer support"
+  },
+  "buttons": {
+    "addToCart": "Add To Cart",
+    "buyNow": "Shope Now",
+    "viewDetails": "View Details",
+    "share": "Share",
+    "addToWishlist": "Add To Wishlist"
+  },
+  "loginPage": {
+    "title": "Login",
+    "welcomeMessage": "Welcome back, customer",
+    "loginWith": "Or login with",
+    "registerMessage": "Don't have an account?",
+    "registerLink": "Register now"
+  },
+  "footer": {
+    "description": "Ecommerce is the electronic buying and selling of goods and services, usually via the internet.",
+    "solutions": "Solutions",
+    "support": "Support",
+    "marketing": "Marketing",
+    "analytics": "Analytics",
+    "commerce": "Commerce",
+    "insights": "Insights",
+    "pricing": "Pricing",
+    "guides": "Guides",
+    "apiStatus": "API Status",
+    "documentation": "Documentation"
+  }
+  ,"footerBottom": {
+    "rights": "&copy; TailCommerce - All Rights Reserved"
+  }
+}

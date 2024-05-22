@@ -19,7 +19,7 @@ export const handleToWishlist = async (
   productId: string
 ) => {
   if (!customerId) {
-    redirect("/login");
+    redirect("/en/login");
   }
 
   await dbConnect();
@@ -30,18 +30,20 @@ export const handleToWishlist = async (
 export const handleToCart = async (
   customerId: string | undefined,
   productId: string,
-  quantity: number
+  quantity: number = 1
 ) => {
   if (!customerId) {
-    redirect("/login");
+    redirect("/en/login");
   }
   await dbConnect();
   const c = await addCartEntry(customerId, productId, quantity);
 
   revalidatePath("/checkout");
 };
-export const editAddress = async (formData: any) => {
-  const customerId = "664798fa72228e26039ac531";
+export const editAddress = async (
+  formData: any,
+  email: string | null | undefined
+) => {
   const userData = Object.fromEntries(formData);
   console.log(userData); // Optional: Logs the userData object
 
@@ -49,7 +51,7 @@ export const editAddress = async (formData: any) => {
     await dbConnect(); // Connect to the database
     const updatedCustomer = await Customer.findOneAndUpdate(
       {
-        _id: customerId,
+        email,
       },
       userData
     );
@@ -57,6 +59,7 @@ export const editAddress = async (formData: any) => {
 
     // Check if the update was successful
     if (updatedCustomer) {
+      revalidatePath("/account"); // Update
       console.log("Customer address updated successfully.");
       return {
         success: true,

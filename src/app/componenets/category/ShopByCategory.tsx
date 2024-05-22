@@ -3,21 +3,23 @@ import { dbConnect } from "@/server";
 import Image from "next/image";
 import Link from "next/link";
 import img from "@/assets/images/category/category-1.jpg";
+import { useTranslations } from "next-intl";
+import Title from "./Title";
 interface Category {
   id: string;
   category: string;
   image: string[];
 }
+
 export default async function ShopByCategory() {
   await dbConnect();
   const categories = await getAllCategories();
 
 
+
   return (
     <div className="container py-16">
-      <h2 className="text-2xl font-medium text-gray-800 uppercase mb-6">
-        shop by category
-      </h2>
+     <Title title="Category"/>
       <div className="grid grid-cols-3 gap-3">
         {categories.map((category: Category) => (
           <div
@@ -32,7 +34,7 @@ export default async function ShopByCategory() {
               height={200}
             />
             <Link
-              href={`/shop?category=${category.category}`}
+              href={`/en/shop?category=${category.category}`}
               className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center text-xl text-white font-roboto font-medium group-hover:bg-opacity-60  transition"
             >
               {category.category}

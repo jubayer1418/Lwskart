@@ -40,7 +40,7 @@ function FormAction() {
             email: result.data.email,
             password: result.data.password,
           });
-          console.log(res);
+         
           if (!res.success) {
             toast.error(res.message, {
               id: toastId,
@@ -49,7 +49,7 @@ function FormAction() {
             toast.success("User Register successfully!", {
               id: toastId,
             });
-            route.push("/login");
+            route.push("/en/login");
           }
         }
       }}

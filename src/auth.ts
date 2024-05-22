@@ -39,7 +39,7 @@ export const {
         const user = await Customer.findOne({
           email: credentials.email,
         }).select("+password");
-        console.log(user);
+       
         if (!user) {
           throw new CredentialsSignin({ cause: "User Not Found!" });
         }
@@ -73,12 +73,14 @@ export const {
   },
   callbacks: {
     async jwt({ token, user }) {
+    
       if (user) {
         token.id = user.id;
       }
       return token;
     },
     async session({ session, token }) {
+    
       if (token && session.user) {
         session.user.id = token.id as string;
       }
@@ -93,6 +95,7 @@ export const {
       if (account?.provider === "google" || account?.provider === "facebook") {
         try {
           const { email, name, image, id } = user;
+        
           await dbConnect();
           const alreadyUser = await Customer.findOne({ email }).exec();
 

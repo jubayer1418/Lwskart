@@ -35,7 +35,7 @@ const Card = async ({ product }: { product: Product }) => {
                     justify-center gap-2 opacity-0 group-hover:opacity-100 transition"
         >
           <Link
-            href={`/product/${product?.id}`}
+            href={`/en/product/${product?.id}`}
             className="text-white text-lg w-9 h-8 rounded-full flex items-center justify-center hover:text-primary transition"
             title="view product"
           >

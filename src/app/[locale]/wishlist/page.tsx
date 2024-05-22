@@ -1,7 +1,7 @@
 import { getAllWishlistEntries } from "@/db/queries";
 import { dbConnect } from "@/server";
 import Image from "next/image";
-import AddToCard from "../componenets/card/AddToCard";
+import AddToCard from "../../componenets/card/AddToCard";
 import { replaceMongoIdInObject, replaceMongoIdInObjectID } from "@/utils";
 import { redirect } from "next/navigation";
 import { auth } from "@/auth";

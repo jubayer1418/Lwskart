@@ -7,7 +7,7 @@ import { redirect } from "next/navigation";
 
 export default async function LoginPage() {
   const session = await auth();
-  console.log(session);
+  (session);
   if (session?.user) {
     redirect("/");
   }
@@ -30,7 +30,7 @@ export default async function LoginPage() {
 
         <p className="mt-4 text-center text-gray-600">
           Don&apos;t have an account?{" "}
-          <Link href="/register" className="text-primary">
+          <Link href="en/register" className="text-primary">
             Register now
           </Link>
         </p>

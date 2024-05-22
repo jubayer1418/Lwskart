@@ -1,7 +1,8 @@
-import { Cart, Category, Customer, Product, Wishlist } from "@/model";
+import { Cart, Category, Customer, Order, Product, Wishlist } from "@/model";
 import { SearchParams } from "@/type";
 import { replaceMongoIdInArray, replaceMongoIdInObject } from "@/utils";
 import pick from "@/utils/pick";
+import { startSession } from "mongoose";
 
 async function getAllCategories() {
   try {
@@ -50,9 +51,9 @@ async function getAllProducts() {
   }
 }
 async function getCustomerById(customerId: string) {
-  console.log(customerId);
   try {
-    const products = await Customer.findOne({ _id: customerId }).lean();
+    const products = await Customer.findOne({ email: customerId }).lean();
+    console.log(products);
     return replaceMongoIdInObject(products);
   } catch (error) {
     console.error("Error retrieving products:", error);
@@ -249,17 +250,135 @@ async function getAllCartEntries(id: string) {
     throw error;
   }
 }
+// async function addCartEntry(
+//   customerId: string,
+//   productId: string,
+//   quantity: number
+// ) {
+//   try {
+//     const newCartEntry = new Cart({ customerId, productId, quantity });
+//     const savedEntry = await newCartEntry.save();
+//     return savedEntry;
+//   } catch (error) {
+//     console.error("Error adding cart entry:", error);
+//     throw error;
+//   }
+// }
 async function addCartEntry(
   customerId: string,
   productId: string,
   quantity: number
 ) {
+  const session = await startSession();
+  session.startTransaction();
+
   try {
+    // Find the product and check if enough quantity is available
+    const product = await Product.findById(productId).session(session);
+    if (!product || product.quantity < quantity) {
+      throw new Error("Insufficient quantity available");
+    }
+
+    // Create the cart entry
     const newCartEntry = new Cart({ customerId, productId, quantity });
-    const savedEntry = await newCartEntry.save();
+    const savedEntry = await newCartEntry.save({ session });
+
+    // Reserve the product quantity
+    product.quantity -= quantity;
+    await product.save({ session });
+
+    // Commit the transaction
+    await session.commitTransaction();
+    session.endSession();
+
+    // Set a timeout to revert the quantity if order is not placed within 30 minutes
+    setTimeout(async () => {
+      await revertProductQuantityIfOrderNotPlaced(savedEntry._id);
+    }, 60 * 1000); // 30 minutes in milliseconds
+
     return savedEntry;
   } catch (error) {
+    // Rollback the transaction
+    await session.abortTransaction();
+    session.endSession();
+
     console.error("Error adding cart entry:", error);
+    throw error;
+  }
+}
+async function revertProductQuantityIfOrderNotPlaced(cartEntryId:string) {
+  const session = await startSession();
+  session.startTransaction();
+
+  try {
+    // Find the cart entry
+    const cartEntry = await Cart.findById(cartEntryId).session(session);
+    if (!cartEntry) {
+      throw new Error("Cart entry not found");
+    }
+
+    // Check if an order has been placed
+    const order = await Order.findOne({ cartEntryId: cartEntry._id }).session(
+      session
+    );
+    if (!order) {
+      // If no order is placed, revert the product quantity
+      const product = await Product.findById(cartEntry.productId).session(
+        session
+      );
+      product.quantity += cartEntry.quantity;
+      await product.save({ session });
+
+      // Optionally, you can remove the cart entry
+      await Cart.findByIdAndDelete(cartEntryId).session(session);
+    }
+
+    // Commit the transaction
+    await session.commitTransaction();
+    session.endSession();
+  } catch (error) {
+    // Rollback the transaction
+    await session.abortTransaction();
+    session.endSession();
+
+    console.error("Error reverting product quantity:", error);
+    throw error;
+  }
+}
+async function placeOrder(customerId:string ,totalPrice:number) {
+  const session = await startSession();
+  session.startTransaction();
+
+  try {
+    // Find the cart entry
+    const cartEntry = await Cart.findById(customerId).session(session);
+    if (!cartEntry) {
+      throw new Error('Cart entry not found');
+    }
+
+    // Create the order
+    const newOrder = new Order({
+      customerId,
+      price:totalPrice,
+   
+      productId: cartEntry.productId,
+      quantity: cartEntry.quantity,
+      orderDate: new Date(),
+      status: 'placed'
+    });
+    await newOrder.save({ session });
+
+    // Commit the transaction
+    await session.commitTransaction();
+    session.endSession();
+
+    return newOrder;
+  } catch (error) {
+    // Rollback the transaction
+    await session.abortTransaction();
+    session.endSession();
+
+    console.error("Error placing order:", error);
     throw error;
   }
 }
@@ -278,4 +397,5 @@ export {
   searchProducts,
   getAllCategoriesSum,
   getCustomerById,
+  placeOrder
 };

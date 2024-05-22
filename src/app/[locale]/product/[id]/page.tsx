@@ -9,11 +9,11 @@ export async function generateMetadata({ params }:{ params: { id: string } }) {
   // read route params
   const id = params.id;
   await dbConnect();
-  const recipe = await findProductById(id);
+  const product = await findProductById(id);
 
   return {
-    title: `${recipe.name} Recipe`,
-    description: recipe.description,
+    title: `${product.name} product`,
+    description: product.description,
   };
 }
 
@@ -23,9 +23,8 @@ const DetailPage = async ({ params: { id } }: { params: { id: string } }) => {
   const relatedProducts: Product[] = await findRelatedProducts(
     product.category
   );
-  console.log(relatedProducts);
+ 
 
-  console.log(product.category);
   return (
     <>
       <Breack>Product</Breack>

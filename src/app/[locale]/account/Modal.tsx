@@ -2,13 +2,13 @@
 
 import { editAddress } from "@/db/action";
 
-const Modal = () => {
+const Modal = ({email}:{email:string | null | undefined}) => {
   return (
     <>
       <dialog id="my_modal_5" className="modal modal-bottom sm:modal-middle">
         <div className="modal-box space-y-4">
           <form
-            action={editAddress}
+            action={async(formData)=>editAddress(formData,email)}
           >
             <h1 className="text-2xl text-primary text-center">
               Add Phone and Address
