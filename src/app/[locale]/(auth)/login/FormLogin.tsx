@@ -37,6 +37,9 @@ const FormLogin = ({session}:any) => {
           });
           router.push(returnUrl);
         } else if (res.success) {
+          toast.success(res?.message as string, {
+            id: toastId,
+          });
           router.push("/");
         }else {
           toast.error(res.message as string, {

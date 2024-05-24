@@ -7,10 +7,10 @@ import { signIn } from "next-auth/react";
 
 const SscialLogins = () => {
   const handleAuth = () => {
-    signIn("google", { callbackUrl: "http://localhost:3000/" });
+    signIn("google", { callbackUrl: "https://lwskart-mu.vercel.app/en" });
   };
   const handleAuthFacebook = () => {
-    signIn("facebook", { callbackUrl: "http://localhost:3000/" });
+    signIn("facebook", { callbackUrl: "https://lwskart-mu.vercel.app/en" });
   };
   return (
     <div className="mt-4 flex gap-4">
