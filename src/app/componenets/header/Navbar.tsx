@@ -1,4 +1,3 @@
-// Navbar.js
 
 import Link from "next/link";
 import Image from "next/image";
@@ -16,6 +15,7 @@ interface HeaderProps {
   categories: any[];
 }
 export default function Navbar({ session,categories }:HeaderProps) {
+  console.log(categories)
   const t = useTranslations('header');
   return (
     <nav className="bg-gray-800">
@@ -34,17 +34,19 @@ export default function Navbar({ session,categories }:HeaderProps) {
             {categories.map((category) => {
               return (
                 <Link
-                  key={category._id}
-                  href={`/en/shop/?category=${category._id}`}
+                  key={category.id}
+                  href={`/en/shop/?category=${category.id}`}
                   className="flex items-center px-6 py-3 hover:bg-gray-100 transition"
                 >
                   <Image
-                    src={sofa}
+                    src={category.image[0]}
+                    width={20}
+                    height={20}
                     alt="sofa"
-                    className="w-5 h-5 object-contain"
+                    className="w-10 h-12 object-contain"
                   />
                   <span className="ml-6 text-gray-600 text-sm">
-                    {category._id}
+                    {category.id}
                   </span>
                 </Link>
               );

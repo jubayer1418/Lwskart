@@ -11,7 +11,7 @@ import { addCartEntry, addWishlistEntry } from "./queries";
 import { revalidatePath } from "next/cache";
 import { auth, signIn } from "@/auth";
 import { CredentialsSignin } from "next-auth";
-import { error } from "console";
+
 import { redirect } from "next/navigation";
 
 export const handleToWishlist = async (
@@ -19,13 +19,14 @@ export const handleToWishlist = async (
   productId: string
 ) => {
   if (!customerId) {
-    redirect("/en/login");
+    return;
   }
 
   await dbConnect();
   const c = await addWishlistEntry(customerId, productId);
-
-  revalidatePath("/wishlist");
+  revalidatePath("/en/wishlist");
+ 
+  return c;
 };
 export const handleToCart = async (
   customerId: string | undefined,
@@ -33,13 +34,16 @@ export const handleToCart = async (
   quantity: number = 1
 ) => {
   if (!customerId) {
-    redirect("/en/login");
+    // Redirect logic should be handled outside this function
+    return;
   }
   await dbConnect();
   const c = await addCartEntry(customerId, productId, quantity);
-
-  revalidatePath("/checkout");
+  revalidatePath("/en/checkout");
+  console.log(c);
+  return c;
 };
+
 export const editAddress = async (
   formData: any,
   email: string | null | undefined
@@ -59,7 +63,7 @@ export const editAddress = async (
 
     // Check if the update was successful
     if (updatedCustomer) {
-      revalidatePath("/account"); // Update
+      revalidatePath("/en/account"); // Update
       console.log("Customer address updated successfully.");
       return {
         success: true,
@@ -74,7 +78,7 @@ export const editAddress = async (
     console.error("Error updating customer address:", error);
     // Optionally handle the error
   }
-  revalidatePath("/account");
+  revalidatePath("/en/account");
 };
 export const registerUser = async (formData: {
   email: string;

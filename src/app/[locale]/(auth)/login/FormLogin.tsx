@@ -3,12 +3,18 @@
 import { login } from "@/db/action";
 
 
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
+
 
 import { toast } from "sonner";
 
-const FormLogin = () => {
-  const route = useRouter();
+const FormLogin = ({session}:any) => {
+  
+  const router = useRouter();
+  const searchParams =useSearchParams()
+  const returnUrl = searchParams.get("returnUrl");
+ 
+
   return (
     <form
       action={async (formData) => {
@@ -25,12 +31,14 @@ const FormLogin = () => {
         const res = await login(email, password);
         
 
-        if (res.success) {
+        if (res.success  && returnUrl) {
           toast.success(res?.message as string, {
             id: toastId,
           });
-          route.refresh();
-        } else {
+          router.push(returnUrl);
+        } else if (res.success) {
+          router.push("/");
+        }else {
           toast.error(res.message as string, {
             id: toastId,
           });

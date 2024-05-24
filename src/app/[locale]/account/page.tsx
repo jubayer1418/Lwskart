@@ -8,7 +8,7 @@ import { redirect } from "next/navigation";
 const ProfileInfo = async () => {
   const session: Session | null | undefined = await auth();
 
-  if (!session) redirect("/login");
+  if (!session) redirect("/en/login");
   await dbConnect();
   const customer = await getCustomerById(session?.user?.email as string);
 

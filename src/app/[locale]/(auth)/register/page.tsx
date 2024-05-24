@@ -24,7 +24,7 @@ export default function SignUp() {
                 </div>
                 {/* ./login with */}
 
-                <p className="mt-4 text-center text-gray-600">Already have an account? <Link href="en/login" className="text-primary">Login now</Link></p>
+                <p className="mt-4 text-center text-gray-600">Already have an account? <Link href="/en/login" className="text-primary">Login now</Link></p>
             </div>
         </div>
     );

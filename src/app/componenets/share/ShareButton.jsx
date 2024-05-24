@@ -1,7 +1,7 @@
 "use client";
 
 function ShareButton({ id }) {
-  const url = `http://localhost:3000/product/${id}`; // Use http for localhost if you're not using https
+  const url = `https://lwskart-mu.vercel.app/en/product/${id}`;
   const title = "My Page Title";
 
   const shareOnSocialMedia = (socialMedia) => {

@@ -48,21 +48,14 @@ const categorySchema = new Schema({
   image: String,
 });
 
-const orderSchema = new Schema({
-  orderDate: { type: Date, default: Date.now },
-  total_price: { type: Number, required: true, min: 0 },
-  status: {
-    type: String,
+const OrderSchema = new mongoose.Schema(
+  {
+    userId: { type: String, required: true },
+    categories: { type: Array, required: true },
+    totalPrice: { type: Number, required: true },
   },
-  quantity: { type: Number, required: true, min: 1 },
-  customerId: { type: Schema.Types.ObjectId, ref: "Customer", required: true },
-  cartEntryId: {
-    type: Schema.Types.ObjectId,
-    ref: "Cart",
-    required: true,
-  },
-  productId: { type: Schema.Types.ObjectId, ref: "Product", required: true },
-});
+  { timestamps: true }
+);
 
 // const orderItemSchema = new Schema({
 //   orderId: { type: Schema.Types.ObjectId, ref: "Order", required: true },
@@ -119,9 +112,9 @@ customerSchema.methods.comparePassword = async function (
     throw error;
   }
 };
-const CheckoutSchema: Schema = new Schema(
+const CheckoutSchema = new mongoose.Schema(
   {
-    customerId: { type: String, required: true },
+    userId: { type: String, required: true },
     firstName: { type: String, required: true },
     lastName: { type: String, required: true },
     company: { type: String },
@@ -130,9 +123,14 @@ const CheckoutSchema: Schema = new Schema(
     city: { type: String, required: true },
     phoneNumber: { type: String, required: true },
     email: { type: String, required: true },
+    agreement:{
+      type: String,
+     
+    }
   },
   { timestamps: true }
 );
+
 const CheckoutModel =
   mongoose.models.Checkout || mongoose.model("Checkout", CheckoutSchema);
 const Customer =
@@ -141,7 +139,7 @@ const Product =
   mongoose.models.Product || mongoose.model("Product", productSchema);
 const Category =
   mongoose.models.Category || mongoose.model("Category", categorySchema);
-const Order = mongoose.models.Order || mongoose.model("Order", orderSchema);
+const Order = mongoose.models.Order || mongoose.model("Order", OrderSchema);
 // const OrderItem =
 //   mongoose.models.OrderItem || mongoose.model("OrderItem", orderItemSchema);
 // const Payment =

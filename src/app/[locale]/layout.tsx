@@ -38,13 +38,14 @@ export default async function RootLayout({
   await dbConnect();
   const session: Session | null | undefined = await auth();
 
+
   const carts = await getAllCartEntries(session?.user?.id as string);
   await dbConnect();
   const wishlist = await getAllWishlistEntries(session?.user?.id as string);
 
   const messages = await getMessages();
 
-  const categories = await getAllCategoriesSum();
+  const categories = await getAllCategories();
   return (
     <html lang={locale}>
       <NextIntlClientProvider messages={messages}>
@@ -52,7 +53,7 @@ export default async function RootLayout({
           <Header carts={carts} wishlist={wishlist}></Header>
           <Navbar session={session} categories={categories}></Navbar>
           {children}
-          <Toaster richColors />
+          <Toaster richColors position="top-center"  />
           <Footer></Footer>
           <FooterBottom></FooterBottom>
         </body>

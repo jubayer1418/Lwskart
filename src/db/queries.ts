@@ -3,6 +3,7 @@ import { SearchParams } from "@/type";
 import { replaceMongoIdInArray, replaceMongoIdInObject } from "@/utils";
 import pick from "@/utils/pick";
 import { startSession } from "mongoose";
+import { revalidatePath, revalidateTag } from "next/cache";
 
 async function getAllCategories() {
   try {
@@ -128,10 +129,23 @@ async function getAllWishlistEntries(id: string) {
 
 async function addWishlistEntry(customerId: string, productId: string) {
   try {
-    const newWishlistEntry = new Wishlist({ customerId, productId });
-    const savedEntry = await newWishlistEntry.save();
+    if (productId && customerId) {
+      const wishlistEntry = await Wishlist.findOne({ customerId, productId });
+      if (wishlistEntry) {
+        return {
+          status: "already",
+          message: "already added",
+        };
+      } else {
+        const newWishlistEntry = new Wishlist({ customerId, productId });
+        await newWishlistEntry.save();
 
-    return savedEntry;
+        return {
+          status: "new",
+          message: "adding wishlist entry",
+        };
+      }
+    }
   } catch (error) {
     console.error("Error adding wishlist entry:", error);
     throw error;
@@ -275,19 +289,39 @@ async function addCartEntry(
   try {
     // Find the product and check if enough quantity is available
     const product = await Product.findById(productId).session(session);
-    if (!product || product.quantity < quantity) {
-      throw new Error("Insufficient quantity available");
+    if (!product) {
+      return {
+        status: "error",
+        message: "Product not found",
+      };
+    }
+
+    if (product.quantity === 0) {
+      return {
+        status: "error",
+        message: "Product out of stock",
+      };
+    } else if (product.quantity < quantity) {
+      return {
+        status: "error",
+        message: "Product quantity is insufficient",
+      };
     }
 
     // Create the cart entry
     const newCartEntry = new Cart({ customerId, productId, quantity });
     const savedEntry = await newCartEntry.save({ session });
-
-    // Reserve the product quantity
+    if (product.quantity - quantity === 0) {
+      console.log("ldkfj");
+      product.availability = "Out of Stock";
+      await product.save({ session });
+    }
     product.quantity -= quantity;
-    await product.save({ session });
 
-    // Commit the transaction
+    await product.save({ session });
+    // Reserve the product quantity
+  
+
     await session.commitTransaction();
     session.endSession();
 
@@ -296,7 +330,10 @@ async function addCartEntry(
       await revertProductQuantityIfOrderNotPlaced(savedEntry._id);
     }, 60 * 1000); // 30 minutes in milliseconds
 
-    return savedEntry;
+    return {
+      status: "new",
+      message: "adding cart entry",
+    };
   } catch (error) {
     // Rollback the transaction
     await session.abortTransaction();
@@ -306,7 +343,9 @@ async function addCartEntry(
     throw error;
   }
 }
-async function revertProductQuantityIfOrderNotPlaced(cartEntryId:string) {
+async function revertProductQuantityIfOrderNotPlaced(cartEntryId: string) {
+  console.log(cartEntryId);
+
   const session = await startSession();
   session.startTransaction();
 
@@ -317,21 +356,17 @@ async function revertProductQuantityIfOrderNotPlaced(cartEntryId:string) {
       throw new Error("Cart entry not found");
     }
 
-    // Check if an order has been placed
-    const order = await Order.findOne({ cartEntryId: cartEntry._id }).session(
+    // If no order is placed, revert the product quantity
+    const product = await Product.findById(cartEntry.productId).session(
       session
     );
-    if (!order) {
-      // If no order is placed, revert the product quantity
-      const product = await Product.findById(cartEntry.productId).session(
-        session
-      );
-      product.quantity += cartEntry.quantity;
-      await product.save({ session });
+    product.quantity += cartEntry.quantity;
+    product.availability = "In Stock";
 
-      // Optionally, you can remove the cart entry
-      await Cart.findByIdAndDelete(cartEntryId).session(session);
-    }
+    await product.save({ session });
+
+    // Optionally, you can remove the cart entry
+    await Cart.findByIdAndDelete(cartEntryId).session(session);
 
     // Commit the transaction
     await session.commitTransaction();
@@ -340,46 +375,6 @@ async function revertProductQuantityIfOrderNotPlaced(cartEntryId:string) {
     // Rollback the transaction
     await session.abortTransaction();
     session.endSession();
-
-    console.error("Error reverting product quantity:", error);
-    throw error;
-  }
-}
-async function placeOrder(customerId:string ,totalPrice:number) {
-  const session = await startSession();
-  session.startTransaction();
-
-  try {
-    // Find the cart entry
-    const cartEntry = await Cart.findById(customerId).session(session);
-    if (!cartEntry) {
-      throw new Error('Cart entry not found');
-    }
-
-    // Create the order
-    const newOrder = new Order({
-      customerId,
-      price:totalPrice,
-   
-      productId: cartEntry.productId,
-      quantity: cartEntry.quantity,
-      orderDate: new Date(),
-      status: 'placed'
-    });
-    await newOrder.save({ session });
-
-    // Commit the transaction
-    await session.commitTransaction();
-    session.endSession();
-
-    return newOrder;
-  } catch (error) {
-    // Rollback the transaction
-    await session.abortTransaction();
-    session.endSession();
-
-    console.error("Error placing order:", error);
-    throw error;
   }
 }
 
@@ -397,5 +392,4 @@ export {
   searchProducts,
   getAllCategoriesSum,
   getCustomerById,
-  placeOrder
 };
